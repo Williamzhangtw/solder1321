@@ -101,7 +101,7 @@ extern void TaskSystickInit(void);
 extern void HAL_SYSTICK_Callback(void);
 extern BOOL HalTimeDelay (uint8_t *p,uint16_t count,BOOL *data_reset);
 extern BOOL HalTimeDelaySimple (uint8_t *p,uint8_t time_count);
-
+extern void TaskCtrl(Task_TypeDef * task,uint16_t id,uint8_t en);
 
 
 

@@ -1,5 +1,5 @@
 temp\flash.o: ..\TOOL\flash.c
-temp\flash.o: ..\TOOL\flash.h
+temp\flash.o: ..\TOOL\../tool/flash.h
 temp\flash.o: ../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal.h
 temp\flash.o: ../Inc/stm32f0xx_hal_conf.h
 temp\flash.o: ../Inc/main.h
@@ -30,6 +30,6 @@ temp\flash.o: ../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_i2c.h
 temp\flash.o: ../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_i2c_ex.h
 temp\flash.o: ../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_pwr.h
 temp\flash.o: ../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_pwr_ex.h
-temp\flash.o: ..\TOOL\../bsp/hotter.h
+temp\flash.o: ..\TOOL\../tool/../bsp/hotter.h
 temp\flash.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 temp\flash.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h

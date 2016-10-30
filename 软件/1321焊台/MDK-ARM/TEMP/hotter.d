@@ -1,5 +1,5 @@
 temp\hotter.o: ..\BSP\hotter.c
-temp\hotter.o: ..\BSP\hotter.h
+temp\hotter.o: ..\BSP\../bsp/hotter.h
 temp\hotter.o: ../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal.h
 temp\hotter.o: ../Inc/stm32f0xx_hal_conf.h
 temp\hotter.o: ../Inc/main.h

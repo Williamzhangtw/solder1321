@@ -39,23 +39,23 @@ typedef   enum
 
 typedef struct 
 {	
-	uint8_t (*power_on)(void);
-	uint8_t (*reset)(void);//函数 
+	TM1650_STRUCT *tm1650;//加热控制器显示设备
+	HOTER_CTRL_TypeDef 	*hotter;//加热控制器控制的发热芯
+	BUTTON_CTRL_TypeDef *button_set;
+	BUTTON_CTRL_TypeDef *button_up;
+	BUTTON_CTRL_TypeDef *button_down;
 	
-	HOTTER_STATUS_ENUM state;
-	BUTTON_CTRL_TypeDef *button;
-	TM1650_STRUCT *tm1650;
-	HOTER_CTRL_TypeDef *hotter;
+	_Bool hotter_ctrl_en;//enable 表示 加热控制器工作，否则表示加热控制不工作
 	
+	HOTTER_STATUS_ENUM state;//表示加热控制器的工作状态 
 	uint8_t hz_50count;
 	
 	
 	uint16_t time100ms;
 	uint16_t heated_times;
-	uint8_t Is_reset_position;//该位为1后不执行加热
-	uint8_t Is_power_on;//dev control switch on
-	uint8_t input_ctrl;
 
+
+	
 	
 	
 }HOTTER_CTRL_Typedef;
@@ -67,13 +67,8 @@ extern void Solder1321Ctrl(void);
 extern void Solder1321PowerOn_ISR(void);
 extern void Solder1321HeatingTime_ISR(void) ;
 
-extern HOTTER_CTRL_Typedef airK;
 
-extern void FanCtrl_ISR(void);
-extern void AirK_init(void);
-extern void AirKCtrl(void);
-extern void AirKPowerOn_ISR(void);
-extern void AirKTime_ISR(void) ;
-extern void AirKTempResetPosition_ISR(void);
-extern void Control_ISR(void);
+
+
+
 #endif

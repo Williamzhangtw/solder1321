@@ -1,16 +1,14 @@
-//verify date:2016/7/28pm
-#include "hotter.h"
+//verify date:2016年10月30日
+#include "../bsp/hotter.h"
 
 /* USER CODE BEGIN Includes */
-
- #include "../tool/adc_filter.h"
- #include "../tool/flash.h"
+#include "../tool/adc_filter.h"
+#include "../tool/flash.h"
 
  
-#if 0
+
 void HotterWorkingState_ISR(HOTER_CTRL_TypeDef * hotter)
 {
-
 	hotter->minus_now =  hotter->real_temperature -hotter->target_temperature ;  
 	switch(hotter->work_state )
 	{
@@ -23,10 +21,8 @@ void HotterWorkingState_ISR(HOTER_CTRL_TypeDef * hotter)
 			break ;
 
 		case OVER_HEAT  : //过热
-
 			if (  hotter->minus_now  <0 )
 			{
-				
 				 hotter->work_state =TEMP_BALANCE ;
 			}
 			break ;
@@ -34,11 +30,9 @@ void HotterWorkingState_ISR(HOTER_CTRL_TypeDef * hotter)
 		case NOT_HEAT : 	//停止加热
 			if (  hotter->minus_now  <=0 )
 			{
-
 				hotter->work_state  = TEMP_BALANCE ;
 			}
 			break ;
-			
 			
 		case TEMP_BALANCE  ://平衡
 			if (  hotter->minus_now  > hotter->temp_distinguish_dif)
@@ -51,14 +45,6 @@ void HotterWorkingState_ISR(HOTER_CTRL_TypeDef * hotter)
 			break ;
 	}
 }
-#endif
-
-
-
-
-
-
-
 
 void HotterRealTemp_ISR(HOTER_CTRL_TypeDef * hotter)
 {
@@ -73,11 +59,11 @@ void Heat_hotter1321(BOOL  en)
 {
   if(en)// heated
   {
-    HAL_GPIO_WritePin(SolderHOT_GPIO_Port,SolderHOT_Pin,GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(hotter1321.GPIO_PORT,hotter1321.GPIO_PIN,GPIO_PIN_RESET);
   }
   else // not heated
   {
-    HAL_GPIO_WritePin(SolderHOT_GPIO_Port,SolderHOT_Pin,GPIO_PIN_SET);
+    HAL_GPIO_WritePin(hotter1321.GPIO_PORT,hotter1321.GPIO_PIN,GPIO_PIN_SET);
   }
 }
 
@@ -91,7 +77,9 @@ void Hotter1321RealTemp_ISR (void)
 
 void Hotter1321_init(void)
 {
-
+	hotter1321 .GPIO_PORT = SolderHOT_GPIO_Port ;
+	hotter1321 .GPIO_PIN =	SolderHOT_Pin ;
+	
 	hotter1321 .Ks = 0.3105;
 	hotter1321 .Bs =-157;
 	hotter1321.Lmax =480;
@@ -114,89 +102,14 @@ void Hotter1321_init(void)
 	hotter1321 .minus_pre =0;
 	hotter1321 .minus_now =0;
 	hotter1321 .temp_distinguish_dif =10;
-	hotter1321.heat_en  = Heat_hotter1321;
 
 
 //开机执行函数
-	hotter1321.heat_en (DISABLE );
+
 }
 
  
 
-
-
-
-
-
-
-HOTER_CTRL_TypeDef hotterK ;
-/*heated
-*/
-void Heat_hotterK(BOOL  en)
-{
-  if(en)// heated
-  {
-    HAL_GPIO_WritePin(AirHOT_GPIO_Port,AirHOT_Pin,GPIO_PIN_RESET);
-  }
-  else // not heated
-  {
-    HAL_GPIO_WritePin(AirHOT_GPIO_Port,AirHOT_Pin,GPIO_PIN_SET);
-  }
-}
-
-
-
-
-void HotterKRealTemp_ISR (void)
-{
-	HotterRealTemp_ISR(&hotterK);
-}
-
-
-void HotterK_init(void)
-{
-
-	//底层
-	hotterK.heat_en  = Heat_hotterK;
-	
-	//数据
-	hotterK.real_adc = 0;	
-	hotterK.real_temperature = 25;
-	hotterK.sensor_err =0;
-	hotterK.hotter_err =0;
-	hotterK.work_state =HEATTING  ;
- 	
-
-	//控制参数
-	hotterK .Ks = 0.2557;
-	hotterK .Bs =-7;
-	hotterK.Lmax =480;
-	hotterK.Lmin =100,
-	hotterK.Cmin =-99;
-	hotterK.Cmax =99;
-	hotterK.target_temperature = 300;
-	hotterK.adjust_temperature = 0;
-	
-	hotterK.sleep_temperature =90;
-	
-	hotterK .sensor_err_adc = 2300;
-	hotterK .temp_distinguish_dif =20; 
-	//数据分析buf
-	hotterK .minus_pre =0;
-	hotterK .minus_now =0;
-	hotterK .temperature_pre =0;
-	hotterK .heated_check_dir =0;
-	
-//开机执行函数
-	hotterK.heat_en (DISABLE );//不加热
-}
-
-
-
-
- 
-
- 
 
 
 

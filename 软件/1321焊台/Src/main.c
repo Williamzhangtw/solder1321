@@ -40,8 +40,8 @@
 #include "../tool/msg_task.h"
 #include "../cantor/hotterctrl.h"
 #include "../tool/flash.h"
- #include "../tool/adc_filter.h"
- #include "../bsp/led.h"
+#include "../tool/adc_filter.h"
+#include "../bsp/led.h"
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -84,26 +84,34 @@ int main(void)
   MX_ADC_Init();
 
   /* USER CODE BEGIN 2 */
-	 
-	HAL_Delay (100);
-
-
+	
+	//显示器属性初始化
 	Tm1650_2_init();
-//	Button_1_init(); 
-////	HotterK_init();
-// 	Hotter1321_init();
+	
+	//按键属性初始化
+ 	Button_set_init(); 
+	Button_up_init(); 
+	Button_down_init(); 
+	
+	Hotter1321_init();
+
+	//任务管理器初始化
  	TaskSystickInit();
 	
- 
-	int16_t i  = 123;
+	FlshPara_Init();
 
-	tm1650_2 .Is_num =YES ;//显示文字
-	tm1650_2 .num =&i;
-	tm1650_2.dot_run_en =ENABLE ;	//不跑灯
-	tm1650_2.blink_en  = ENABLE ;//不闪
-	tm1650_2.bottom_dot_en =NO;//不显示加热点
-////	AirK_init ();
-//	Solder1321_init();
+/*设置温度类型*/
+	if (!HAL_GPIO_ReadPin(UP_KEY_GPIO_Port ,UP_KEY_Pin ))
+	{
+		HAL_Delay (10);
+		if (!HAL_GPIO_ReadPin(UP_KEY_GPIO_Port ,UP_KEY_Pin ))
+		{
+			hotter1321 .temperature_type = 1;
+		}
+	}
+	
+	//AirK_init ();
+	//Solder1321_init();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -111,18 +119,35 @@ int main(void)
   while (1)
   {
   /* USER CODE END WHILE */
-
-  /* USER CODE BEGIN 3 */
- 	TaskProcess(&task_systick );  
-//		AirKCtrl ();
-//		Solder1321Ctrl ();
- 
 		
-    
- 
-	 
-	 
-
+  /* USER CODE BEGIN 3 */
+		TaskProcess(&task_systick );  
+		//AirKCtrl ();
+		//Solder1321Ctrl ();
+		static _Bool dir = 0;
+		if (dir ==0)
+		{
+			if(solder1321 .button_set->continue_press_times >4000)
+			{
+				dir =1;
+			}
+		}
+		else
+		{
+			solder1321.tm1650->Is_num =YES;
+			solder1321.tm1650->num = & solder1321 .hotter ->target_temperature ;
+			solder1321.tm1650->dot_run_en = NO;//跑灯效果
+			solder1321.tm1650->bottom_dot_en = NO;//加热指示
+			solder1321.tm1650->blink_en = YES;//闪烁显示
+			HAL_Delay (2000);//延时时间，TaskProcess(&task_systick );  无法被执行。思路失败。需要将每个任务安排在定时器中断里面。
+			while(dir)
+			{
+				
+			}
+		}
+		
+		
+		
   }
   /* USER CODE END 3 */
 

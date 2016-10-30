@@ -21,22 +21,19 @@ void TaskISR(Task_TypeDef * task)//轮询方式进行触发
 				task ->msg[i].time= task ->msg[i].time_temp ;
 			}
 		}
-		//task ->msg++;
 	}	 
-	//task ->msg=task ->msg - 120;
 }
 
 void TaskCtrl(Task_TypeDef * task,uint16_t id,uint8_t en)
 {
 	  
-	for(uint16_t i=0; i < task->id_num  ;i++) 
+	for(uint16_t i=0; i < 25  ;i++) 
 	{
 		if(task ->msg[i].id   == id)
 		{
 			task ->msg[i].Is_enable =en;return ;
 		}
 	}
-	//task ->msg=task ->msg - sizeof(Msg_TypeDef)*task->id_num;
 }
 
 
@@ -52,10 +49,7 @@ void TaskProcess( Task_TypeDef * task)
 				task ->msg[i].funproc();					
 			}
 		}
-//		task ->msg=task ->msg+12;//sizeof(Msg_TypeDef);
-	//	task ->msg++;
 	}
-	//	task ->msg=task ->msg - 120;
 }
 
 
@@ -65,17 +59,17 @@ Task_TypeDef task_systick;
 Msg_TypeDef msg_systick[] =      //消息，消息处理函数
 {	
 	//id										Is_enable,	Is_ready,	time,		time_temp,		(*funproc)
-	{Tm1650_2_show_MSG, 					NO,	NO,				100,		500,					&Button_1_ISR},
+	{Tm1650_2_show_MSG, 					NO,	NO,				100,		500,					&Button_set_ISR},
 	{Button_1_MSG , 							YES,	NO,				50,		100,					&Tm1650_2_show_ISR},	
 	{TempAdcFilter_MSG , 					NO,		NO,				1,			500,						NULL},
 
 	{AirKPowerOn_MSG,							NO,		NO,				100,		0,						NULL},	
-	{AirKTempResetPosition_MSG,		YES,		NO,				100,		500,						NULL},
-	{AirKTime_MSG,								NO,		NO,				100,		500,						Button_1_ISR},
-{Hotter1321RealTemp_MSG,			NO,		NO,				1,			0,					NULL},
+	{AirKTempResetPosition_MSG,		YES,		NO,				100,	4000,						NULL},
+	{AirKTime_MSG,								NO,		NO,				100,		500,						NULL},
+	{Hotter1321RealTemp_MSG,			NO,		NO,				1,			0,					NULL},
 	{Solder1321PowerOn_MSG,				YES,		NO,				100,		500,				NULL		},
 	{Solder1321HeatingTime_msg,		NO,		NO,				100,		0,						NULL},
-	{HotterKRealTemp_MSG,					YES,		NO,				1,			100,						Button_1_ISR},
+	{HotterKRealTemp_MSG,					NO,		NO,				1,			100,						NULL},
 //	{FanCtrl_MSG ,								NO,		NO,				100,		0,						&FanCtrl_ISR},
 //	{Control_MSG,									NO,		NO,				10,			0,						&Control_ISR},
 };
